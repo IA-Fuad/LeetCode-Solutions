@@ -16,10 +16,8 @@ public:
         
         ListNode* node = head;
         while (node && node->next) {
-            ListNode* temp = node->next;
-            while (temp && temp->val == val) temp = temp->next;
-            node->next = temp;
-            node = node->next;
+            if (node->next->val == val) node->next = node->next->next;
+            else node = node->next;
         }
         
         return head;
