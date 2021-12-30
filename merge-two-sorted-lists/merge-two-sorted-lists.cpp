@@ -14,16 +14,34 @@ public:
         if (!list1) return list2;
         if (!list2) return list1;
         
-        ListNode* handler = new ListNode();
         if (list1->val < list2->val) {
-            handler->val = list1->val;
-            handler->next = mergeTwoLists(list1->next, list2);
+            list1->next = mergeTwoLists(list1->next, list2);
+            return list1;
         }
         else {
-            handler->val = list2->val;
-            handler->next = mergeTwoLists(list1, list2->next);
+            list2->next = mergeTwoLists(list1, list2->next);
+            return list2;
         }
         
-        return handler;
+        
+//         if (!list1) return list2;
+//         if (!list2) return list1;
+        
+//         if (list1->val > list2->val) swap(list1, list2);
+//         ListNode* node = list1;
+        
+//         while (true) {
+//             if (!list2) break;
+//             if (node->next && node->next->val < list2->val) {
+//                 node = node->next;
+//             }
+//             else {
+//                 ListNode* temp = node->next;
+//                 node->next = list2;
+//                 list2 = list2->next;
+//                 node->next->next = temp;
+//             }
+//         }
+//         return list1;
     }
 };
