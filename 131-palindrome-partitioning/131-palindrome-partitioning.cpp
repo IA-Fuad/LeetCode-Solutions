@@ -1,14 +1,18 @@
 class Solution {
     vector<vector<string>> ans;
     vector<string> palin;
+    vector<vector<bool>> isPalin;
     
     string isPalindrome(const string& s, int i, int k) {
-        string t = "";
-        for (int l = i, r = i+k-1; l < r; l++, r--) {
-            if (s[l] != s[r]) return "";
+        if (k == 1) {
+            isPalin[i][i] = true;
+            return s.substr(i, k);
         }
-        for (int l = i; l < i+k; l++) t += s[l];
-        return t;
+        else if (s[i] == s[i+k-1] && (k == 2 || isPalin[i+1][i+k-2])) {
+            isPalin[i][i+k-1] = true;
+            return s.substr(i, k);
+        }
+        return "";
     }
     
     void rec(const string& s, int i, int n) {
@@ -28,6 +32,7 @@ class Solution {
     
 public:
     vector<vector<string>> partition(string s) {
+        isPalin.resize(s.size()+1, vector<bool>(s.size()+1, false));
         rec(s, 0, s.size());
         return ans;
     }
