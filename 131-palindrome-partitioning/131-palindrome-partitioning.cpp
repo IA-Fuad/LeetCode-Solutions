@@ -9,6 +9,7 @@ class Solution {
             return s.substr(i, k);
         }
         else if (s[i] == s[i+k-1] && (k == 2 || isPalin[i+1][i+k-2])) {
+            cout << k << ' ';
             isPalin[i][i+k-1] = true;
             return s.substr(i, k);
         }
