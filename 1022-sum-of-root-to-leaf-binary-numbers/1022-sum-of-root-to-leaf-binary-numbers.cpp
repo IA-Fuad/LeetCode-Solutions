@@ -24,7 +24,26 @@ class Solution {
     
 public:
     int sumRootToLeaf(TreeNode* root) {
-        rec(root, 0);
+//         rec(root, 0);
+//         return sum;
+        
+        stack<pair<TreeNode*, int>> nodes;
+        nodes.push({root, 0});
+        
+        while (!nodes.empty()) {
+            TreeNode* node = nodes.top().first;
+            int number = nodes.top().second;
+            nodes.pop();
+            number = (number << 1) | node->val;
+            if (!node->left && !node->right) {
+                sum += number;
+            }
+            else {
+                if (node->right) nodes.push({node->right, number});
+                if (node->left) nodes.push({node->left, number});
+            }
+        }
+        
         return sum;
     }
 };
