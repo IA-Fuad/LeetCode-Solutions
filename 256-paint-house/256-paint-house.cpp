@@ -24,21 +24,23 @@ public:
         // }
         // return mnCost;
         
-        dp.resize(costs.size()+1, vector<int>(3, INT_MAX));
-        dp[0][0] = dp[0][1] = dp[0][2] = 0;
+        // dp.resize(costs.size()+1, vector<int>(3, INT_MAX));
+        // dp[0][0] = dp[0][1] = dp[0][2] = 0;
+        vector<int> colorCost(3, 0);
         int n = costs.size();
         
         for (int i = 1; i <= n; i++) {
+            auto currentColorCost = colorCost;
             for (int k = 0; k < 3; k++) {
                 int mnCost = INT_MAX;
                 for (int j = 0; j < 3; j++) {
                     if (j == k) continue;
-                    mnCost = min(mnCost, dp[i-1][j]);
+                    mnCost = min(mnCost, currentColorCost[j]);
                 }
-                dp[i][k] = mnCost + costs[i-1][k];
+                colorCost[k] = mnCost + costs[i-1][k];
             }
         }
         
-        return min({dp[n][0], dp[n][1], dp[n][2]});
+        return min({colorCost[0], colorCost[1], colorCost[2]});
     }
 };
