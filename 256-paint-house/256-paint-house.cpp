@@ -17,11 +17,28 @@ class Solution {
     
 public:
     int minCost(vector<vector<int>>& costs) {
-        dp.resize(costs.size(), vector<int>(3, -1));
-        int mnCost = INT_MAX;
-        for (int i = 0; i < 3; i++) {
-            mnCost = min(mnCost, rec(costs, 0, i));
+        // dp.resize(costs.size(), vector<int>(3, -1));
+        // int mnCost = INT_MAX;
+        // for (int i = 0; i < 3; i++) {
+        //     mnCost = min(mnCost, rec(costs, 0, i));
+        // }
+        // return mnCost;
+        
+        dp.resize(costs.size()+1, vector<int>(3, INT_MAX));
+        dp[0][0] = dp[0][1] = dp[0][2] = 0;
+        int n = costs.size();
+        
+        for (int i = 1; i <= n; i++) {
+            for (int k = 0; k < 3; k++) {
+                int mnCost = INT_MAX;
+                for (int j = 0; j < 3; j++) {
+                    if (j == k) continue;
+                    mnCost = min(mnCost, dp[i-1][j]);
+                }
+                dp[i][k] = mnCost + costs[i-1][k];
+            }
         }
-        return mnCost;
+        
+        return min({dp[n][0], dp[n][1], dp[n][2]});
     }
 };
