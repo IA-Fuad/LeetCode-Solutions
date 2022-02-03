@@ -1,30 +1,32 @@
 class Solution {
-    //unordered_map<int, int> kSumCount;
+    unordered_map<int, int> kSumCount;
     
 public:
-    int fourSumCount(vector<int>& A, vector<int>& B, vector<int>& C, vector<int>& D) {
-    return kSumCount(vector<vector<int>>() = {A, B, C, D});
-}
-int kSumCount(vector<vector<int>> &lists) {
-    unordered_map<int, int> m;
-    addToHash(lists, m, 0, 0);
-    return countComplements(lists, m, lists.size() / 2, 0);
-}
-void addToHash(vector<vector<int>> &lists, unordered_map<int, int> &m, int i, int sum) {
-    if (i == lists.size() / 2)
-        ++m[sum];
-    else
-        for (int a : lists[i])
-            addToHash(lists, m, i + 1, sum + a);
-}
-int countComplements(vector<vector<int>> &lists, unordered_map<int, int> &m, int i, int complement) {
-    if (i == lists.size()) {
-        auto it = m.find(complement);
-        return it == end(m) ? 0 : it->second;
+    int fourSumCount(vector<int>& nums1, vector<int>& nums2, vector<int>& nums3, vector<int>& nums4) {
+        vector<vector<int>> nums = {nums1, nums2, nums3, nums4};
+        kSum(nums, 0, 0);
+        return getKSumCount(nums, nums.size()/2, 0);
     }
-    int cnt = 0;
-    for (int a : lists[i])
-        cnt += countComplements(lists, m, i + 1, complement - a);
-    return cnt;
-}
+    
+    void kSum(const vector<vector<int>>& nums, int i, int sum) {
+        if (i == nums.size()/2) {
+            kSumCount[sum]++;
+            return;
+        }
+        for (int k = 0; k < nums[i].size(); k++) {
+            kSum(nums, i+1, sum + nums[i][k]);
+        }
+    }
+    
+    int getKSumCount(const vector<vector<int>>& nums, int i, int complement) {
+        if (i == nums.size()) {
+            auto it = kSumCount.find(complement);
+            return it == kSumCount.end() ? 0 : it->second;
+        }
+        int count = 0;
+        for (int k = 0; k < nums[i].size(); k++) {
+            count += getKSumCount(nums, i+1, complement - nums[i][k]);
+        }
+        return count;
+    }
 };
