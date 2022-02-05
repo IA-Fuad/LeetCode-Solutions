@@ -29,7 +29,7 @@ class Solution {
         return head;
     }
     
-    ListNode* merge(vector<ListNode*> lists, int s, int e) {
+    ListNode* merge(vector<ListNode*>& lists, int s, int e) {
         if (s == e) return lists[s];
         
         int mid = s + (e - s) / 2;
