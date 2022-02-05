@@ -9,29 +9,36 @@
  * };
  */
 class Solution {
-    void mergeList(ListNode* list1, ListNode* list2) {
-        auto x = list1;
+    ListNode* mergeList(ListNode* list1, ListNode* list2) {
+        if (!list1) return list2;
+        if (!list2) return list1;
+        
+        if (list1->val > list2->val) swap(list1, list2);
+        auto head = list1;
+        
         while (list2) {
             if (!list1->next || list1->next->val >= list2->val) {
                 auto temp = list1->next;
-                list1->next = new ListNode(list2->val);
-                list1->next->next = temp;
-                list1 = list1->next;
+                list1->next = list2;
                 list2 = list2->next;
+                list1->next->next = temp;
             }
             else list1 = list1->next;
         }
+        
+        return head;
     }
     
 public:
     ListNode* mergeKLists(vector<ListNode*>& lists) {
-        ListNode* mergedList = new ListNode();
-        ListNode* head = mergedList;
+        if (lists.size() == 0) return nullptr;
+
+        ListNode* head = lists[0];
         
-        for (auto rootNode : lists) {
-            mergeList(head, rootNode);
+        for (int i = 1; i < lists.size(); i++) {
+            head = mergeList(head, lists[i]);
         }
         
-        return head->next;
+        return head;
     }
 };
