@@ -33,22 +33,12 @@ public:
     ListNode* mergeKLists(vector<ListNode*>& lists) {
         if (lists.size() == 0) return nullptr;
 
-//         ListNode* head = lists[0];
+        ListNode* head = lists[0];
         
-//         for (int i = 1; i < lists.size(); i++) {
-//             head = mergeList(head, lists[i]);
-//         }
-        
-//         return head;
-        
-        int k = lists.size(), interval = 1;
-        while (interval < k) {
-            for (int i = 0; i+interval < k; i += interval * 2) {
-                lists[i] = mergeList(lists[i], lists[i+interval]);
-            }
-            interval *= 2;
+        for (int i = 1; i < lists.size(); i++) {
+            head = mergeList(head, lists[i]);
         }
         
-        return lists[0];
+        return head;
     }
 };
