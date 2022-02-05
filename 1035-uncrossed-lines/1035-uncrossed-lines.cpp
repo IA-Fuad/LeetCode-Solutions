@@ -1,30 +1,23 @@
 class Solution {
-    unordered_map<int, vector<int>> indices;
     vector<vector<int>> dp;
     
-    int getMxUnCrossedLines(vector<int>& nums, int n1, int n2, int i, int j) {
-        if (i == n1 || j == n2) return 0;
-        if (dp[i][j+1] != -1) return dp[i][j+1];
+    int getMxUnCrossedLines(vector<int>& nums1, vector<int>& nums2, int i, int j) {
+        if (i == nums1.size() || j == nums2.size()) return 0;
+        if (dp[i][j] != -1) return dp[i][j];
         
-        int taken = 0, notTaken = 0;
-        auto inds = indices.find(nums[i]);
-        if (inds != indices.end()) {
-            int indx = upper_bound(inds->second.begin(), inds->second.end(), j) - inds->second.begin();
-            if (indx != inds->second.size()) {
-                taken = getMxUnCrossedLines(nums, n1, n2, i+1, inds->second[indx]) + 1;
-            }
+        if (nums1[i] == nums2[j]) {
+            dp[i][j] = getMxUnCrossedLines(nums1, nums2, i+1, j+1) + 1;
         }
-        notTaken = getMxUnCrossedLines(nums, n1, n2, i+1 ,j);
+        else {
+            dp[i][j] = max(getMxUnCrossedLines(nums1, nums2, i+1, j), getMxUnCrossedLines(nums1, nums2, i, j+1));
+        }
         
-        return dp[i][j+1] = max(taken, notTaken);
+        return dp[i][j];
     }
     
 public:
     int maxUncrossedLines(vector<int>& nums1, vector<int>& nums2) {
-        for (int i = 0; i < nums2.size(); i++) {
-            indices[nums2[i]].push_back(i);
-        }
-        dp.resize(nums1.size(), vector<int>(nums2.size()+1, -1));
-        return getMxUnCrossedLines(nums1, nums1.size(), nums2.size(), 0, -1);
+        dp.resize(nums1.size(), vector<int>(nums2.size(), -1));
+        return getMxUnCrossedLines(nums1, nums2, 0, 0);
     }
 };
