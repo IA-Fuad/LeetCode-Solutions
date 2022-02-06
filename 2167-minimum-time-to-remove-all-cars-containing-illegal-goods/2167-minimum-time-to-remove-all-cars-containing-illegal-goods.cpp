@@ -2,54 +2,30 @@ class Solution {
 public:
     int minimumTime(string s) {
         int n = s.size();
-        vector<int> left(n), right(n);
+        vector<int> dp(n);
 
-        for (int i = 0, t = 0; i < n; i++) {
+        dp[0] = s[0] == '1';
+        for (int i = 1; i < n; i++) {
             if (s[i] == '1') {
-                if (i+1 <= t+2) {
-                    while (i < n && s[i] == '1') {
-                        t = i+1;
-                        left[i] = t;
-                        i++;
-                    }
-                    i--;
-                    continue;
-                }
-                else {
-                    t += 2;
-                }
+                dp[i] = min(i+1, dp[i-1] + 2);
             }
-            left[i] = t;
+            else {
+                dp[i] = dp[i-1];
+            }
         }
 
-        int mn2 = INT_MAX;
-        for (int i = n-1, t = 0; i >= 0; i--) {
-            if (s[i] == '1') {
-                if ((n-i) <= t+2) {
-                    while (i >= 0 && s[i] == '1') {
-                        t = n-i;
-                        right[i] = t;
-                        i--;
-                    }
-                    i++;
-                    continue;
-                }
-                else {
-                    t += 2;
-                }
-            }
-            right[i] = t;
-        }
+        int mn = dp[n-1];
+        dp[n-1] = s[n-1] == '1';
         
-        int mn = min(left[n-1], right[0]);
-        
-        for (int i = 0; i < n; i++) {
+        for (int i = n-2; i >= 0; i--) {
+            int left = i > 0 ? dp[i-1] : 0;
             if (s[i] == '1') {
-                int x = INT_MAX, y = INT_MAX;
-                if (i > 0) x = left[i-1] + right[i];
-                if (i < n-1) y = left[i] + right[i+1];
-                mn = min(mn, min(x, y));
+                dp[i] = min(n-i, dp[i+1] + 2);
             }
+            else {
+                dp[i] = dp[i+1];
+            }
+            mn = min(mn, left + dp[i]);
         }
         
         return mn;
