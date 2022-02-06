@@ -3,9 +3,7 @@ public:
     int minimumTime(string s) {
         int n = s.size();
         vector<int> left(n), right(n);
-        
-        int mn = INT_MAX, t1, t2;
-        
+
         for (int i = 0, t = 0; i < n; i++) {
             if (s[i] == '1') {
                 if (i+1 <= t+2) {
@@ -43,7 +41,7 @@ public:
             right[i] = t;
         }
         
-        mn = min(left[n-1], right[0]);
+        int mn = min(left[n-1], right[0]);
         
         for (int i = 0; i < n; i++) {
             if (s[i] == '1') {
