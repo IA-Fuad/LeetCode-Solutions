@@ -1,19 +1,12 @@
 class Solution {
 public:
     char findTheDifference(string s, string t) {
-        vector<int> charCount(26, 0);
+        char diff = 0;
         for (char c : s) {
-            charCount[c-'a']++;
+            diff ^= c;
         }
         for (char c : t) {
-            charCount[c-'a']--;
-        }
-        char diff;
-        for (char c : t) {
-            if (charCount[c-'a'] == -1) {
-                diff = c;
-                break;
-            }
+            diff ^= c;
         }
         return diff;
     }
