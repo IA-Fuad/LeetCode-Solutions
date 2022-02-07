@@ -1,67 +1,41 @@
+
 class Solution {
-    bool isPredecessor(const string& a, const string& b) {
-        if (a.size() == b.size()) {
-            return false;
-        }
-        int i, j;
-        for (i = 0, j = 0; i < a.size() && j < b.size(); j++) {
-            if (a[i] == b[j]) {
-                i++;
-            }
-        }
+    
+private:
 
-        return i == a.size();
-    }
-    
-    vector<int> dp;
-    
-    int rec(vector<string>& words, int i) {
-        if (dp[i] != -1) {
-            return dp[i];
+    int dfs(unordered_set<string> &words, unordered_map<string, int> &memo, string currentWord) {
+        // If the word is encountered previously we just return its value present in the map (memoization).
+        if (memo.find(currentWord) != memo.end()) {
+            return memo[currentWord];
         }
-        int mxLen = 1;
-        for (int j = i-1; j >= 0; j--) {
-            if (words[j].size() < words[i].size()-1) {
-                break;
-            }
-            if (isPredecessor(words[j], words[i])) {
-                mxLen = max(mxLen, rec(words, j) + 1);
-                //cout << words[j] << ' ' << words[i] << endl;
-            }
-        }
-        return dp[i] = mxLen;
-    }
-    
-public:
-    int longestStrChain(vector<string>& words) {
-//         int n = words.size();
-//         sort(words.begin(), words.end(), cmp);
-//         vector<int> longestChains(n, 1);
+        // This stores the maximum length of word sequence possible with the 'currentWord' as the
+        int maxLength = 1;
 
-//         int longestChain = 1;
-        
-//         for (int i = 1; i < n; i++) {
-//             for (int j = i-1; j >= 0; j--) {
-//                 if (words[j].size() < words[i].size()-1) {
-//                     break;
-//                 }
-//                 if (isPredecessor(words[j], words[i]) && longestChains[j] + 1 > longestChains[i]) {
-//                     longestChains[i] = longestChains[j] + 1;
-//                 }
-//             }
-//             longestChain = max(longestChain, longestChains[i]);
-//         }
-        
-//         return longestChain;
-        
-        int n = words.size(), mxLen = 0;
-        dp.resize(n, -1);
-        sort(words.begin(), words.end(), cmp);
-        for (int i = n-1; i >= 0; i--) mxLen = max(mxLen, rec(words, i));
-        return mxLen;
+        // creating all possible strings taking out one character at a time from the `currentWord`
+        for (int i = 0; i < currentWord.length(); i++) {
+            string newWord = currentWord.substr(0, i) + currentWord.substr(i + 1);
+            // If the new word formed is present in the list, we do a dfs search with this newWord.
+            if (words.find(newWord) != words.end()) {
+                int currentLength = 1 + dfs(words, memo, newWord);
+                maxLength = max(maxLength, currentLength);
+            }
+        }
+        memo[currentWord] = maxLength;
+
+        return maxLength;
     }
-    
-    bool static cmp(string& x, string& y) {
-        return x.size() < y.size();
+
+public :
+    int longestStrChain(vector<string> &words) {
+        unordered_map<string, int> memo;
+        unordered_set<string> wordsPresent;
+        for (const string &word : words) {
+            wordsPresent.insert(word);
+        }
+        int ans = 0;
+        for (const string &word : words) {
+            ans = max(ans, dfs(wordsPresent, memo, word));
+        }
+        return ans;
     }
 };
