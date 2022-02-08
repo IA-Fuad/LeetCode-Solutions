@@ -8,12 +8,18 @@ class Solution {
         return sum;
     }
     
-public:
-    int addDigits(int num) {
+    int rec(int num) {
         int sum = digitSum(num);
         if (sum > 9) {
-            return addDigits(sum);
+            return rec(sum);
         }
         return sum;
+    }
+    
+public:
+    int addDigits(int num) {
+        if (num < 10) return num;
+        int sum = num % 9;
+        return sum == 0 ? 9 : sum;
     }
 };
