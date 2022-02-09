@@ -1,22 +1,27 @@
 class Solution {   
+    void rec(int l, int r) {
+        for (int i = l; i <= r; i++) {}
+    }
+    
+    
 public:
     int countSubstrings(string s) {
         int n = s.size();
-        vector<vector<bool>> isPalindrome(n, vector<bool>(n, false));
+        vector<bool> isPalindrome(n, false);
         int palindromeCount = 0;
  
         for (int j = 0; j < n; j++) {
             for (int i = 0; i <= j; i++) {
                 if (i == j) {
-                    isPalindrome[i][j] = true;
+                    isPalindrome[i] = true;
                 }
                 else if (j == i+1) {
-                    isPalindrome[i][j] = s[i] == s[j];
+                    isPalindrome[i] = s[i] == s[j];
                 }
                 else {
-                    isPalindrome[i][j] = isPalindrome[i+1][j-1] & s[i] == s[j];
+                    isPalindrome[i] = isPalindrome[i+1] & s[i] == s[j];
                 }
-                if (isPalindrome[i][j]) {
+                if (isPalindrome[i]) {
                     palindromeCount++;
                 }
             }
