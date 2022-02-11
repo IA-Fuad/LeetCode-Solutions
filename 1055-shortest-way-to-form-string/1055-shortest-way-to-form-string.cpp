@@ -2,27 +2,33 @@ class Solution {
 public:
     int shortestWay(string source, string target) {
         int subSeqNeeded = 1, ss = source.size(), ts = target.size();
-        vector<vector<int>> charIndices(26);
+        vector<vector<int>> charIndices(ss, vector<int>(26,-1));
         
-        for (int i = 0; i < ss; i++) {
-            charIndices[source[i]-'a'].push_back(i);
+        for (int i = ss-1; i >= 0; i--) {
+            if (i == ss-1) {
+                charIndices[i][source[i]-'a'] = i;
+                continue;
+            }
+            for (int j = 0; j < 26; j++) {
+                charIndices[i][j] = charIndices[i+1][j];
+            }
+            charIndices[i][source[i]-'a'] = i;
         }
         
-        for (int i = 0, k = -1; i < ts; i++) {
+        for (int i = 0, k = 0; i < ts; i++) {
             int c = target[i] - 'a';
-            if (charIndices[c].size() == 0) {
-                return -1;
-            }
-            int foundAt = lower_bound(charIndices[c].begin(), charIndices[c].end(), k+1) - charIndices[c].begin();
-            if (foundAt == charIndices[c].size()) {
+            if (charIndices[0][c] == -1) return -1;
+            
+            if (k == ss) {
                 subSeqNeeded++;
-                k = charIndices[c][0];
+                k = 0;
             }
-            else {
-                k = charIndices[c][foundAt];
+            else if (charIndices[k][c] == -1) {
+                subSeqNeeded++;
+                k = 0;
             }
-            //cout << foundAt << ' ';
-            //cout << k << endl;
+            
+            k = charIndices[k][c] + 1;
         }
         
         return subSeqNeeded;
