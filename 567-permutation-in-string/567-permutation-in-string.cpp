@@ -7,31 +7,30 @@ public:
             return false;
         }
         
-        vector<int> charCount(26, 0), rangeCharCount(26, 0);
+        vector<int> charCount(26, 0);
+        int distinctChars = 0;
         
         for (char c : s1) {
             charCount[c-'a']++;
+            distinctChars += charCount[c-'a'] == 1 ? 1 : 0;
         }
 
-        bool doesContain = false;
-        
-        for (int i = 0; i < m && !doesContain; i++) {
+        for (int i = 0, k = 0; i < m; i++) {
             int c = s2[i] - 'a';
             charCount[c]--;
+            
+            if (charCount[c] == 0) distinctChars--;
+
             if (i >= n) {
                 int c2 = s2[i-n] - 'a';
                 charCount[c2]++;
+                
+                if (charCount[c2] == 1) distinctChars++;
             }
             
-            doesContain = true;
-            for (int k = 0; k < 26; k++) {
-                if (charCount[k] != 0) {
-                    doesContain = false;
-                    break;
-                }
-            }
+            if (distinctChars == 0) return true;
         }
         
-        return doesContain;
+        return false;
     }
 };
