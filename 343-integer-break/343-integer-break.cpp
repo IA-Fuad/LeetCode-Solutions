@@ -14,13 +14,13 @@ class Solution {
 public:
     int integerBreak(int n) {
         if (n < 4) return n-1;
-        vector<int> dp(n+1, INT_MIN);
+        vector<int> dp(n+1, 0);
         //return rec(n, dp);
 
-        dp[0] = 1, dp[1] = 1, dp[2] = 2, dp[3] = 3;
-        for (int k = 4; k <= n; k++) {
+        dp[1] = 1;
+        for (int k = 2; k <= n; k++) {
             for (int i = 1; i < k; i++) {
-                dp[k] = max(dp[k], dp[i] * (k - i));
+                dp[k] = max(dp[k], max(dp[i] * (k - i), i * (k-i)));
             }
         }
         
