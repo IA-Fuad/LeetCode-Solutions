@@ -4,14 +4,14 @@ public:
         int n = nums.size();
         if (n < 3) return false;
         
-        int smallest = nums[0], secondSmallest = INT_MAX;
+        int smallest = INT_MAX, secondSmallest = INT_MAX;
 
-        for (int i = 1; i < n; i++) {
+        for (int i = 0; i < n; i++) {
             if (nums[i] > secondSmallest) return true;
-            if (nums[i] < smallest) {
+            if (nums[i] <= smallest) {
                 smallest = nums[i];
             }
-            else if (nums[i] < secondSmallest && nums[i] != smallest) {
+            else if (nums[i] < secondSmallest) {
                 secondSmallest = nums[i];
             }
         }
