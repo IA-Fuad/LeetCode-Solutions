@@ -1,36 +1,45 @@
 class Solution {
 public:
+    enum WordStatus {
+        NotVisited = 0,
+        VisitedFromBegin = 1,
+        VisitedFromEnd = 2
+    };
     int ladderLength(string beginWord, string endWord, vector<string>& wordList) {
-        unordered_map<string, bool> markWords;
+        unordered_map<string, WordStatus> markWords;
         for (string& w : wordList) {
-            markWords[w] = true;
+            markWords[w] = NotVisited;
         }
         
-        queue<pair<string, int>> Q;
-        Q.push({beginWord, 1});
-        markWords[beginWord] = false;
+        queue<pair<string, int>> Qb, Qe;
+        Qb.push({beginWord, 1});
+        Qe.push({endWord, 1});
+        markWords[beginWord] = VisitedFromBegin;
+        //markWords[endWord] = VisitedFromEnd;
         
-        while (!Q.empty()) {
-            string currentWord = Q.front().first;
-            int seqLen = Q.front().second;
-            Q.pop();
+        while (!Qb.empty()) {
+            string currentWordFromBegin = Qb.front().first;
+            string currentWordFromEnd = Qe.front().first;
+            int seqLenFromBegin = Qb.front().second;
+            int seqLenFromEnd = Qe.front().second;
+            Qb.pop();
+           // Qe.pop();
+            if (currentWordFromBegin == endWord) return seqLenFromBegin;
             
-            if (currentWord == endWord) {
-                return seqLen;
-            }
-            
-            for (int i = 0; i < currentWord.size(); i++) {
-                string temp = currentWord;
+            for (int i = 0; i < currentWordFromBegin.size(); i++) {
+                string temp = currentWordFromBegin;
                 for (char c = 'a'; c <= 'z'; c++) {
                     temp[i] = c;
                     
                     auto it = markWords.find(temp);
-                    if (it != markWords.end() && it->second) {
-                        Q.push({temp, seqLen+1});
-                        it->second = false;
+                    if (it != markWords.end() && it->second != VisitedFromBegin) {
+                        Qb.push({temp, seqLenFromBegin+1});
+                        it->second = VisitedFromBegin;
                     }
                 }
             }
+            
+         
         }
         
         return 0;
