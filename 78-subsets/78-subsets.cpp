@@ -1,21 +1,22 @@
 class Solution {
     vector<vector<int>> powerSet;
     
-    void rec(vector<int>& nums, int i, vector<int> subSet) {
+    void rec(vector<int>& nums, int i, vector<int>& subSet) {
         if (i == nums.size()) {
             powerSet.push_back(subSet);
             return;
         }
         
-        auto taken = subSet;
-        taken.push_back(nums[i]);
-        rec(nums, i+1, taken);
+        subSet.push_back(nums[i]);
+        rec(nums, i+1, subSet);
+        subSet.pop_back();
         rec(nums, i+1, subSet);
     }
     
 public:
     vector<vector<int>> subsets(vector<int>& nums) {
-        rec(nums, 0, {});
+        vector<int> subSet;
+        rec(nums, 0, subSet);
         return powerSet;
     }
 };
