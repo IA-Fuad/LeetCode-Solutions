@@ -1,6 +1,7 @@
 class Solution {
 public:
     int uniquePaths(int m, int n) {
+        if (n < m) swap(m, n);
         vector<int> paths(n+1, 0);
         
         paths[1] = 1;
