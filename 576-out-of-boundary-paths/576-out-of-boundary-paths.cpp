@@ -21,36 +21,36 @@ public:
     int findPaths(int m, int n, int maxMove, int startRow, int startColumn) {
         // vector<vector<vector<int>>> dp(m, vector<vector<int>>(n, vector<int>(maxMove+1, -1)));
         // return rec(dp, startRow, startColumn, m, n, maxMove);
-        vector<vector<int>> dp(m, vector<int>(n, 0));
+        vector<vector<vector<int>>> dp(m, vector<vector<int>>(n, vector<int>(maxMove+1, 0)));
         
-        dp[startRow][startColumn] = 1;
+        dp[startRow][startColumn][0] = 1;
         int paths = 0;
         
         for (int move = 0; move < maxMove; move++) {
-            auto temp = dp;
+            //auto temp = dp;
             for (int i = 0; i < m; i++) {
                 for (int j = 0; j < n; j++) {
                     //cout << dp[i][j] << ' ';
-                    if (dp[i][j] > 0) {
+                    if (dp[i][j][move] > 0) {
                         for (int k = 0; k < 4; k++) {
                             int x = i + dx[k];
                             int y = j + dy[k];
                             if (x < 0 || y < 0 || x == m || y == n) {
-                                paths += dp[i][j];
+                                paths += dp[i][j][move];
                                 paths %= mod;
                             }
                             else {
-                                temp[x][y] += dp[i][j];
-                                temp[x][y] %= mod;
+                                dp[x][y][move+1] += dp[i][j][move];
+                                dp[x][y][move+1] %= mod;
                             }
                         }
-                        temp[i][j] = 0;
+                        dp[i][j][move] = 0;
                     }
                     //cout << paths << ' ';
                 }
                 //cout << endl;
             }
-            dp = temp;
+            //dp = temp;
             //cout << endl << endl;
         }
         
