@@ -27,31 +27,22 @@ public:
         int paths = 0;
         
         for (int move = 0; move < maxMove; move++) {
-            //auto temp = dp;
             for (int i = 0; i < m; i++) {
                 for (int j = 0; j < n; j++) {
-                    //cout << dp[i][j] << ' ';
-                    if (dp[i][j][move] > 0) {
-                        for (int k = 0; k < 4; k++) {
-                            int x = i + dx[k];
-                            int y = j + dy[k];
-                            if (x < 0 || y < 0 || x == m || y == n) {
-                                paths += dp[i][j][move];
-                                paths %= mod;
-                            }
-                            else {
-                                dp[x][y][move+1] += dp[i][j][move];
-                                dp[x][y][move+1] %= mod;
-                            }
+                    for (int k = 0; k < 4; k++) {
+                        int x = i + dx[k];
+                        int y = j + dy[k];
+                        if (x < 0 || y < 0 || x == m || y == n) {
+                            paths += dp[i][j][move];
+                            paths %= mod;
                         }
-                        dp[i][j][move] = 0;
+                        else {
+                            dp[x][y][move+1] += dp[i][j][move];
+                            dp[x][y][move+1] %= mod;
+                        }
                     }
-                    //cout << paths << ' ';
                 }
-                //cout << endl;
             }
-            //dp = temp;
-            //cout << endl << endl;
         }
         
         return paths;
