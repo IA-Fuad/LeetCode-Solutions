@@ -21,9 +21,21 @@ class Solution {
     
 public:
     int change(int amount, vector<int>& coins) {
-        if (amount == 0) return 1;
-        dp.resize(amount+1, vector<int>(coins.size(), -1));
-        sort(coins.begin(), coins.end());
-        return rec(amount, 0, coins);
+        // if (amount == 0) return 1;
+        // dp.resize(amount+1, vector<int>(coins.size(), -1));
+        // sort(coins.begin(), coins.end());
+        // return rec(amount, 0, coins);
+        
+        vector<int> comb(amount+1, 0);
+        
+        comb[0] = 1;
+
+        for (int i = 0; i < coins.size(); i++) {
+            for (int k = coins[i]; k <= amount; k++) {
+                comb[k] += comb[k - coins[i]];
+            }
+        }
+        
+        return comb[amount];
     }
 };
