@@ -21,7 +21,7 @@ public:
         //return x;
         for (int l = n-1; l >= 0; l--) {
             dp[l][l] = 0;
-            for (int r = 0; r < n; r++) {
+            for (int r = l; r < n; r++) {
                 for (int k = l; k < r; k++) {
                     int maxFromLeft = INT_MIN, maxFromRight = INT_MIN;
                     for (int i = l; i <= k; i++) maxFromLeft = max(maxFromLeft, arr[i]);
