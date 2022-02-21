@@ -25,24 +25,26 @@ public:
         
         int n = nums.size();
 
-        vector<vector<int>> dp(n+1, vector<int>(total*2+1));
+        vector<int> dp(total*2+1);
         
-        dp[n][total] = 1;
+        dp[total] = 1;
 
         for (int k = n-1; k >= 0; k--) {
+            vector<int> curr(total*2+1);
             for (int s = -total; s <= total; s++) {
                 int shiftedS = s + total;
                 int positive = shiftedS + nums[k];
                 int negative = shiftedS - nums[k];
                 if (positive >= 0 and positive <= 2*total) {
-                    dp[k][shiftedS] += dp[k+1][shiftedS+nums[k]];
+                    curr[shiftedS] = dp[positive];
                 }
                 if (negative >= 0 and negative <= 2*total) {
-                    dp[k][shiftedS] += dp[k+1][shiftedS-nums[k]];
+                    curr[shiftedS] += dp[negative];
                 }
             }
+            dp = curr;
         }
 
-        return dp[0][target+total];
+        return dp[target+total];
     }
 };
