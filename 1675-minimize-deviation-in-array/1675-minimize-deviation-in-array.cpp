@@ -1,27 +1,40 @@
-class Solution {    
+class Solution {
 public:
     int minimumDeviation(vector<int>& nums) {
-        priority_queue<int> largest;
-        int mn = INT_MAX;
-        int ans = INT_MAX;
-        
-        for (int n : nums) {
-            if (n&1) n *= 2;
-            largest.push(n);
-            mn = min(mn, n);
-        }
-        
-        while (!largest.empty()) {
-            int x = largest.top();
-            largest.pop();
-            
-            ans = min(ans, x - mn); 
-            if (x % 2 == 0) {
-                mn = min(mn, x/2);
-                largest.push(x/2);
+        int n = nums.size(), ans = INT_MAX;
+        vector<pair<int, int>> vec;
+        for (int i = 0; i < n; i++) {
+            int k = nums[i];
+            if (k&1) {
+                vec.push_back({k, i});
+                vec.push_back({k*2, i});
             }
             else {
-                break;
+                while (k && k%2 == 0) {
+                    vec.push_back({k, i});
+                    k /= 2;
+                }
+                vec.push_back({k, i});
+            }
+        }
+        sort(vec.begin(), vec.end());
+        
+        unordered_map<int, int> mark;
+        
+        for (int i = 0, j = 0, k = 0; j < vec.size(); j++) {
+            auto it = mark.find(vec[j].second);
+            if (it == mark.end()) {
+                k++;
+            }
+            mark[vec[j].second]++;
+            
+            while (i < j && mark[vec[i].second] > 1) {
+                mark[vec[i].second]--;
+                i++;
+            }
+            
+            if (k == n) {
+                ans = min(ans, vec[j].first - vec[i].first);
             }
         }
         
