@@ -1,7 +1,7 @@
 class Solution {
 public:
     int fixedPoint(vector<int>& arr) {
-        int lo = 0, hi = arr.size(), mid;
+        int lo = 0, hi = arr.size() - 1, mid;
         
         while (lo < hi) {
             mid = lo + (hi - lo)/2;
@@ -10,6 +10,6 @@ public:
             else lo = mid + 1;
         }
         
-        return hi < arr.size() && arr[hi] == hi ? hi : -1;
+        return arr[hi] == hi ? hi : -1;
     }
 };
