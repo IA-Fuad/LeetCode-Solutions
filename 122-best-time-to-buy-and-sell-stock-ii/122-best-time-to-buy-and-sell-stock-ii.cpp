@@ -3,16 +3,16 @@ class Solution {
         if (i == prices.size()) return 0;
         if (dp[i][canBuy] != -1) return dp[i][canBuy];
         
-        int mx = INT_MIN;
+        int buy = INT_MIN, sell = INT_MIN, hold = INT_MIN;
         if (canBuy) {
-            mx = rec(prices, i + 1, false, dp) - prices[i];
+            buy = rec(prices, i + 1, false, dp) - prices[i];
         }
         else {
-            mx = rec(prices, i + 1, true, dp) + prices[i];
+            sell = rec(prices, i + 1, true, dp) + prices[i];
         }
-        mx = max(mx, rec(prices, i + 1, canBuy, dp));
+        hold = rec(prices, i + 1, canBuy, dp);
         
-        return dp[i][canBuy] = mx;
+        return dp[i][canBuy] = max({buy, sell, hold});
     }
     
 public:
