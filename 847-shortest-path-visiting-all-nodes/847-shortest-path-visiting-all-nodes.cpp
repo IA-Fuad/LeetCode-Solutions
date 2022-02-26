@@ -26,6 +26,7 @@ public:
         dp.resize(n, vector<int>(endMask+1, -1));
         int mn = INT_MAX;
         for (int i = 0; i < n; i++) {
+            dp.resize(n, vector<int>(endMask+1, -1));
             mn = min(mn, rec(graph, i, (1 << i)));
         }
         return mn;
