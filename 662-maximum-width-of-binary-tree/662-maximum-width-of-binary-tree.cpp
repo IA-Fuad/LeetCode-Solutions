@@ -13,31 +13,31 @@ class Solution {
 public:
     int widthOfBinaryTree(TreeNode* root) {
         if (!root) return 0;
-        queue<pair<TreeNode*, uint64_t>> Q;
+        queue<pair<TreeNode*, int>> Q;
         Q.push({root, 0});
         
         int maxWidth = 1;
         while (!Q.empty()) {
-            uint64_t leftMostNodeNumber = Q.front().second;
-            uint64_t rightMostNodeNumber = leftMostNodeNumber;
-            queue<pair<TreeNode*, uint64_t>> nextLevel;
-            
+            int leftMostNodeNumber = Q.front().second;
+            int rightMostNodeNumber = leftMostNodeNumber;
+            queue<pair<TreeNode*, int>> nextLevel;
+
             while (!Q.empty()) {
                 auto currNode = Q.front().first;
-                uint64_t nodeNumber = Q.front().second;
+                int nodeNumber = Q.front().second - leftMostNodeNumber;
                 rightMostNodeNumber = nodeNumber;
                 Q.pop();
 
                 if (currNode->left) {
-                    nextLevel.push({currNode->left, nodeNumber * 2});
+                    nextLevel.push({currNode->left, (int64_t)nodeNumber * 2});
                 }
                 if (currNode->right) {
-                    nextLevel.push({currNode->right, nodeNumber * 2 + 1});
+                    nextLevel.push({currNode->right, (int64_t)nodeNumber * 2 + 1});
                 }
             }
 
             Q = nextLevel;
-            maxWidth = max(maxWidth, (int)(rightMostNodeNumber - leftMostNodeNumber) + 1);
+            maxWidth = max(maxWidth, (rightMostNodeNumber - (leftMostNodeNumber - leftMostNodeNumber)) + 1);
         }
         
         return maxWidth;
