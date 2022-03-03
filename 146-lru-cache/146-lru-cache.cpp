@@ -4,6 +4,11 @@ struct Data {
     Data* prev;
     Data* next;
     
+    Data() {
+        this->key = this->value = -1;
+        this->prev = this->next = nullptr;
+    }
+    
     Data(int key, int value) {
         this->key = key;
         this->value = value;
@@ -14,26 +19,13 @@ struct Data {
 class LRUCache {
     int capacity;
     unordered_map<int, Data*> keyToData;
-    Data* head = nullptr;
-    Data* tail = nullptr;
+    Data* head;
+    Data* tail;
     
-    void moveToTail(int key) {
-        auto data = keyToData[key];
-        if (data == tail) {
-            return;
-        }
-        if (data == head) {
-            head = head->next;
-        }
-        if (data->prev) {
-            data->prev->next = data->next;
-        }
-        if (data->next) {
-            data->next->prev = data->prev;
-        }
+    void moveToTail(Data* data) {
+        data->next->prev = data->prev;
+        data->prev->next = data->next;
         addToTail(data);
-        
-        if (!head) head = tail;
     }
     
     void addToTail(int key, int value) {
@@ -41,37 +33,33 @@ class LRUCache {
     }
     
     void addToTail(Data* data) {
-        tail->next = data;
-        data->prev = tail;
-        data->next = nullptr;
-        tail = data;
+        data->prev = tail->prev;
+        data->next = tail;
+        data->prev->next = data;
+        tail->prev = data;
     }
     
     void deleteFromHead() {
-        if (head) {
-            auto tempHead = head;
-            if (head->next) {
-                head->next->prev = nullptr;
-                head = head->next;
-            }
-            else {
-                head = tail = nullptr;
-            }
-
-            keyToData[tempHead->key] = nullptr;
-            delete tempHead;
-        }
+        auto tempHead = head->next;
+        tempHead->next->prev = head;
+        head->next = tempHead->next;
+        keyToData.erase(tempHead->key);
+        delete tempHead;
     }
     
 public:
     LRUCache(int capacity) {
         this->capacity = capacity;
+        this->head = new Data();
+        this->tail = new Data();
+        this->head->next = this->tail;
+        this->tail->prev = this->head;
     }
     
     int get(int key) {
         auto it = keyToData.find(key);
-        if (it != keyToData.end() and it->second != nullptr) {
-            moveToTail(key);
+        if (it != keyToData.end()) {
+            moveToTail(it->second);
             return it->second->value;
         }
         return -1;
@@ -79,14 +67,9 @@ public:
     
     void put(int key, int value) {
         if (get(key) == -1) {
-           if (!head) {
-                head = new Data(key, value);
-                tail = head;
-            }
-            else {
-                addToTail(key, value);
-            }
-            keyToData[key] = tail;
+            auto newData = new Data(key, value);
+            addToTail(newData);
+            keyToData[key] = newData;
             
             if (capacity > 0) {
                 capacity--;
@@ -97,7 +80,7 @@ public:
         }
         else {
             keyToData[key]->value = value;
-            moveToTail(key);
+            moveToTail(keyToData[key]);
         }
     }
 };
