@@ -22,22 +22,30 @@ public:
 //         dp[5][0] = 4;
 //         dp[5][1] = 9;
 
-        int n = nums.size();
-        vector<vector<int>> earning(n+1, vector<int>(2, 0));
-        
-        sort(nums.begin(), nums.end());
-        
-        earning[1][0] = nums[0];
-        
-        for (int i = 2, j; i <= n; i++) {
-            if (nums[i-1] - 1 != nums[i-2]) j = i-1;
-            else {
-                j = lower_bound(nums.begin(), nums.end(), nums[i-1]-1) - nums.begin();
-            }
-            earning[i][0] = nums[i-1] + ((nums[i-1] == nums[i-2]) ? earning[i-1][0] : max(earning[j][0], earning[j][1]));
-            earning[i][1] = max(earning[i-1][0], earning[i-1][1]);
+        int n = nums.size(), ans = 0;
+        map<int, int> numCount;
+
+        for (int num : nums) {
+            numCount[num]++;
         }
         
-        return max(earning[n][0], earning[n][1]);
+        vector<vector<int>> earning(numCount.size()+1, vector<int>(2, 0));
+        
+        int i = 1, lastNumber = -1;
+        
+        for (auto it : numCount) {
+            int gain = it.first * it.second;
+            if (lastNumber+1 == it.first) {
+                earning[i][0] = max(earning[i-1][0], earning[i-1][1] + gain);
+            }
+            else {
+                earning[i][0] = gain + max(earning[i-1][0], earning[i-1][1]);
+            }
+            earning[i][1] = max(earning[i-1][0], earning[i-1][1]);
+            lastNumber = it.first;
+            i++;
+        }
+        
+        return max(earning[i-1][0], earning[i-1][1]);
     }
 };
