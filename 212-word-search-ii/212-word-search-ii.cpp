@@ -31,9 +31,13 @@ class Solution {
     void findWords(vector<string>& res, vector<vector<char>>& board, int row, int col, Node* node) {
         char currentLetter = board[row][col];
         
-        if (node->next[currentLetter-'a'] and node->next[currentLetter-'a']->word != "") {
-            res.push_back(node->next[currentLetter-'a']->word);
-            node->next[currentLetter-'a']->word = "";
+        auto currentNode = node->next[currentLetter-'a'];
+        
+        if (!currentNode) return;
+        
+        if (currentNode->word != "") {
+            res.push_back(currentNode->word);
+            currentNode->word = "";
         }
 
         board[row][col] = 'X';
@@ -43,10 +47,7 @@ class Solution {
             int y = dy[k] + col;
             
             if (x < 0 or y < 0 or x == board.size() or y == board[0].size() or board[x][y] == 'X') continue;
-            
-            if (node->next[currentLetter-'a']) {
-                findWords(res, board, x, y, node->next[currentLetter-'a']);
-            }
+            findWords(res, board, x, y, currentNode);
         }
         
         board[row][col] = currentLetter;
