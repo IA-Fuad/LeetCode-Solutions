@@ -31,21 +31,24 @@ public:
         
         vector<vector<int>> earning(numCount.size()+1, vector<int>(2, 0));
         
-        int i = 1, lastNumber = -1;
+        int i = 1, lastNumber = -1, take = 0, doNotTake = 0;
         
         for (auto it : numCount) {
             int gain = it.first * it.second;
+            int prevTake = take, prevDoNotTake = doNotTake;
+            
             if (lastNumber+1 == it.first) {
-                earning[i][0] = max(earning[i-1][0], earning[i-1][1] + gain);
+                take = max(prevTake, prevDoNotTake + gain);
             }
             else {
-                earning[i][0] = gain + max(earning[i-1][0], earning[i-1][1]);
+                take = gain + max(prevTake, prevDoNotTake);
             }
-            earning[i][1] = max(earning[i-1][0], earning[i-1][1]);
+            
+            doNotTake = max(prevTake, prevDoNotTake);
             lastNumber = it.first;
             i++;
         }
         
-        return max(earning[i-1][0], earning[i-1][1]);
+        return max(take, doNotTake);
     }
 };
