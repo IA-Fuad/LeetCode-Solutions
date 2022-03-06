@@ -12,15 +12,32 @@ class Solution {
         int64_t waysToPickUp = (unPicked * countOrders(unPicked - 1, unDelivered, alreadyCounted)) % MOD;
         int64_t waysToDeliver = ((unDelivered - unPicked) * countOrders(unPicked, unDelivered - 1, alreadyCounted)) % MOD;
 
-        counted = (waysToPickUp + waysToDeliver) % MOD;
-        
-        return counted;
+        return counted = (waysToPickUp + waysToDeliver) % MOD;
     }
     
 public:
     int countOrders(int n) {
-        vector<vector<int>> alreadyCounted(n+1, vector<int>(n+1, -1));
-        return countOrders(n, n, alreadyCounted);
+        // vector<vector<int>> alreadyCounted(n+1, vector<int>(n+1, -1));
+        // return countOrders(n, n, alreadyCounted);
+        
+        
+        vector<vector<int>> dp(n+1, vector<int>(n+1));
+
+        for (int unPicked = 0; unPicked <= n; unPicked++) {
+             for (int unDelivered = unPicked; unDelivered <= n; unDelivered++) {
+                if (unPicked == 0 and unDelivered == 0) {
+                    dp[0][0] = 1;
+                    continue;
+                } 
+                
+                int64_t waysToPick = unPicked > 0 ? ((int64_t)unPicked * dp[unPicked-1][unDelivered]) % MOD : 0;
+                int64_t waysToDeliver = unDelivered > unPicked ? ((int64_t)(unDelivered - unPicked) * dp[unPicked][unDelivered-1]) % MOD : 0;
+
+                dp[unPicked][unDelivered] = (waysToPick + waysToDeliver) % MOD;
+            }
+        }
+        
+        return dp[n][n];
     }
 };
 
