@@ -17,7 +17,7 @@ class Solution {
             if (ans != -1) break;
         }
 
-        visited[variable] = false;
+        //visited[variable] = false;
         return ans;
     }
     
@@ -36,6 +36,7 @@ public:
         vector<double> answers;
 
         for (auto query : queries) {
+            visited.clear();
             double result;
             if (graph[query[0]].size() == 0 or graph[query[1]].size() == 0) result = -1;
             else result = rec(graph, visited, query[0], query[1], 1.0);
