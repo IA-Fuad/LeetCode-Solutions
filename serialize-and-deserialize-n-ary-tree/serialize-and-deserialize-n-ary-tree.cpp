@@ -43,9 +43,9 @@ private:
     }
     
     Node* rec(stringstream& s) {
-        string nodeValue;
+        int nodeValue;
         if (s >> nodeValue) {
-            auto node = new Node(stoi(nodeValue));
+            auto node = new Node(nodeValue);
             int childSize;
             s >> childSize;
             
