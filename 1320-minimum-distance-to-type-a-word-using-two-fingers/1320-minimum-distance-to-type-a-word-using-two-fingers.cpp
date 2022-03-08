@@ -21,14 +21,28 @@ class Solution {
     
 public:
     int minimumDistance(string word) {
-        dp.resize(word.size(), vector<vector<int>>(26, vector<int>(26, -1)));
-        int minDist = INT_MAX;
+//         dp.resize(word.size(), vector<vector<int>>(26, vector<int>(26, -1)));
+//         int minDist = INT_MAX;
 
-        for (char c = 'A'; c <= 'Z'; c++) {
-            minDist = min(minDist, rec(word, 0, word[0], c));
+//         for (char c = 'A'; c <= 'Z'; c++) {
+//             minDist = min(minDist, rec(word, 0, word[0], c));
+//         }
+        
+        int n = word.size(), ans = INT_MAX;
+        dp.resize(n+1, vector<vector<int>>(27, vector<int>(27, 0)));
+        
+        for (int i = n-1; i >= 0; i--) {
+            for (char c1 = 'A'; c1 <= 'Z'; c1++) {
+                for (char c2 = 'A'; c2 <= 'Z'; c2++) {
+                    int move1 = dp[i+1][word[i]-'A'][c2-'A'] + getCharDist(word[i], c1);
+                    int move2 = dp[i+1][c1-'A'][word[i]-'A'] + getCharDist(word[i], c2);
+                    dp[i][c1-'A'][c2-'A'] = min(move1, move2);
+                    if (i == 0) ans = min(ans, dp[i][c1-'A'][c2-'A']);
+                }
+            }
         }
         
-        return minDist;
+        return ans;
     }
 };
 
