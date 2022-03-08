@@ -24,7 +24,7 @@ public:
         dp.resize(word.size(), vector<vector<int>>(26, vector<int>(26, -1)));
         int minDist = INT_MAX;
 
-        for (char c : word) {
+        for (char c = 'A'; c <= 'Z'; c++) {
             minDist = min(minDist, rec(word, 0, word[0], c));
         }
         
@@ -43,7 +43,7 @@ choiceOne = rec(kthChar+1, firstFinger -> kthChar, secondFinger) + (dist between
 choiceTwo = rec(kthChar+1, firstFinget, secondFinger -> kthChar) + (didt between secondFinger and kthChar)
 minDist = min(choiceOne, choiceTwo);
 
-kthChar's col = (kthChar - 'A') % 6
 kthChar'c row = floor((kthChar - 'A') / 6)
+kthChar's col = (kthChar - 'A') % 6
 
 */
