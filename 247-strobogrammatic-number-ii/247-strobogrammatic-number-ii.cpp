@@ -1,14 +1,13 @@
 class Solution {
     int stbgNums[5] = {0,1,6,8,9};
+    char reverseMap[120];
     
     string getStrobogrammaticNumber(const string& firstHalf, bool isOdd = false) {
         string strobogrammaticNumber = firstHalf;
         int starFrom = isOdd ? firstHalf.size()-2 : firstHalf.size()-1;
         
         for (int i = starFrom; i >= 0; i--) {
-            char c = firstHalf[i];
-            if (c == '9') c = '6';
-            else if (c == '6') c = '9';
+            char c = reverseMap[firstHalf[i]];
             strobogrammaticNumber += c;
         }
         
@@ -41,7 +40,7 @@ public:
         if (n == 1) return {"0", "1", "8"};
         vector<string> ans;
         string num;
-        
+        reverseMap['0'] = '0', reverseMap['1'] = '1', reverseMap['6'] = '9', reverseMap['8'] = '8', reverseMap['9'] = '6';
         rec(ans, num, n);
         return ans;
     }
