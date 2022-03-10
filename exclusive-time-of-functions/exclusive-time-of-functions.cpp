@@ -26,9 +26,9 @@ class Solution {
 public:
     vector<int> exclusiveTime(int n, vector<string>& logs) {
         vector<FunctionLog> logData = parseLogData(logs);
-        sort(logData.begin(), logData.end(), [](FunctionLog& x, FunctionLog& y) {
-           return x.time < y.time; 
-        });
+        // sort(logData.begin(), logData.end(), [](FunctionLog& x, FunctionLog& y) {
+        //    return x.time < y.time; 
+        // });
         
         vector<int> exclusiveTimeForEachFunction(n);
         stack<FunctionLog> callStack;
