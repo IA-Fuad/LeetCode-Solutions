@@ -27,3 +27,10 @@ public:
         return dominoes;
     }
 };
+
+/*
+
+.L.R...LR..L..
+.L.RRRRLRRRL..
+..LLRRLL
+*/
