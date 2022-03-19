@@ -7,18 +7,23 @@ class Solution {
         return balance;
     }
     
-    void rec(unordered_set<string>& ans, const string& s, int i, string& validParentheses, int balance) {
+    vector<unordered_set<string>> seen;
+    
+    void rec(vector<string>& ans, const string& s, int i, string& validParentheses, int balance) {
         if (balance < 0) return;
+        if (seen[i].find(validParentheses) != seen[i].end()) return;
+        seen[i].insert(validParentheses);
         if (i == s.size()) {
             if (balance != 0) return;
             if (maxValidLen == -1) {
                 maxValidLen = validParentheses.size();
             }
             if (validParentheses.size() == maxValidLen) {
-                ans.insert(validParentheses);
+                ans.push_back(validParentheses);
             }
             return;
         }
+        
         validParentheses.push_back(s[i]);
         rec(ans, s, i+1, validParentheses, updateBalance(balance, s[i]));
         validParentheses.pop_back();
@@ -29,11 +34,11 @@ class Solution {
     
 public:
     vector<string> removeInvalidParentheses(string s) {
-        unordered_set<string> uniqueValidParentheses;
-        string validParentheses = "";
-        rec(uniqueValidParentheses, s, 0, validParentheses, 0);
+        seen.resize(s.size()+1);
         vector<string> ans;
-        for (auto p : uniqueValidParentheses) ans.push_back(p);
+        string validParentheses = "";
+        rec(ans, s, 0, validParentheses, 0);
+        
         return ans;
     }
 };
