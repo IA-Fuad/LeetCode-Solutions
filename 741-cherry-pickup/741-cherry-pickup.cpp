@@ -8,7 +8,7 @@ class Solution {
             return INT_MIN;
         }
         
-        if ((i1 == n-1 and j1 == n-1) or (i2 == n-1 and j2 == n-1)) return grid[i1][j1];
+        if ((i1 == n-1 and j1 == n-1) and (i2 == n-1 and j2 == n-1)) return grid[i1][j1];
         if (dp[i1][j1][i2] != -1) return dp[i1][j1][i2];
         
         int a = rec(i1+1, j1, i2+1, j2, grid);
