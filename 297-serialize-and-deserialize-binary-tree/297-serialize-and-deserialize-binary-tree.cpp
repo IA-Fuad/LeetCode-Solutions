@@ -39,19 +39,14 @@ private:
         TreeNode* root;
         
         string node;
-        while (ss >> node) {
-            //cout << node << ' ';
-            if (node == "N") {
-                return nullptr;
-            }
-            else {
-                root = new TreeNode(stoi(node));
-                root->left = deserialize(ss);
-                root->right = deserialize(ss);
-                return root;
-            }
+        ss >> node;
+        if (node == "N") {
+            return nullptr;
         }
-        return nullptr;
+        root = new TreeNode(stoi(node));
+        root->left = deserialize(ss);
+        root->right = deserialize(ss);
+        return root;
     }
 };
 
