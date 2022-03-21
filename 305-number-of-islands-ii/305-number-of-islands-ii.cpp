@@ -3,13 +3,15 @@ class Solution {
     unordered_map<int, int> ranks;
     
     void merge(int a, int b) {
-        if (ranks[a] >= ranks[b]) {
+        if (ranks[a] == ranks[b]) {
+            parents[a] = b;
+            ranks[b]++;
+        }
+        else if (ranks[a] > ranks[b]) {
             parents[b] = a;
-            ranks[a]++;
         }
         else {
             parents[a] = b;
-            ranks[b]++;
         }
     }
     
