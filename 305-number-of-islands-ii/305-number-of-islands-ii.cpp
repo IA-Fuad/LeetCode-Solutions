@@ -15,7 +15,7 @@ class Solution {
     
     int findParent(int a) {
         if (parents[a] == a) return a;
-        return findParent(parents[a]);
+        return parents[a] = findParent(parents[a]);
     }
     
     int getId(int i, int j, int n) {
