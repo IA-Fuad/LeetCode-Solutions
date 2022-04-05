@@ -1,34 +1,12 @@
 class Solution {
 public:
     int maxArea(vector<int>& height) {
-        int ans = INT_MIN;
+        int ans = INT_MIN, i = 0, j = height.size()-1;
         
-        vector<pair<int, int>> heights;
-        
-        for (int i = 0; i < height.size(); i++) {
-            if (heights.size() == 0 or heights.back().first < height[i]) {
-                heights.push_back({height[i], i});
-            }
-            else {
-                for (auto h : heights) {
-                    auto[hi, dis] = h;
-                    ans = max(ans, min(hi, height[i]) * (i - dis));
-                }
-            }
-        }
-        
-        heights.clear();
-        
-        for (int i = height.size()-1; i >= 0; i--) {
-            if (heights.size() == 0 or heights.back().first < height[i]) {
-                heights.push_back({height[i], i});
-            }
-            else {
-                for (auto h : heights) {
-                    auto[hi, dis] = h;
-                    ans = max(ans, min(hi, height[i]) * (dis - i));
-                }
-            }
+        while (i < j) {
+            ans = max(ans, min(height[i], height[j]) * (j - i));
+            if (height[i] < height[j]) i++;
+            else j--;
         }
         
         return ans;
