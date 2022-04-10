@@ -1,18 +1,12 @@
 class Solution {
 public:
     int minProductSum(vector<int>& nums1, vector<int>& nums2) {
-        priority_queue<int> Q1;
-        priority_queue<int, vector<int>, greater<int>> Q2;
-        
-        for (int n : nums1) Q1.push(n);
-        for (int n : nums2) Q2.push(n);
-        
+        sort(nums1.begin(), nums1.end());
+        sort(nums2.rbegin(), nums2.rend());
+
         int sum = 0;
-        
-        while (!Q1.empty()) {
-            sum += (Q1.top() * Q2.top());
-            Q1.pop();
-            Q2.pop();
+        for (int i = 0; i < nums1.size(); i++) {
+            sum += (nums1[i] * nums2[i]);
         }
         
         return sum;
