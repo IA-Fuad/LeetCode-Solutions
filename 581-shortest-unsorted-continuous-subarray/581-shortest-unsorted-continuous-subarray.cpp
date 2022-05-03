@@ -12,9 +12,7 @@ public:
         for (int i = n-2; i >= 0; i--) {
             if (rightMax != INT_MIN or nums[i] > nums[i+1]) rightMax = max(rightMax, nums[i]);
         }
-        
-        cout << leftMin << ' ' << rightMax << endl;
-        
+
         int l = -1, r = -1;
         
         for (int i = 0, j = n-1; i < n; i++, j--) {
