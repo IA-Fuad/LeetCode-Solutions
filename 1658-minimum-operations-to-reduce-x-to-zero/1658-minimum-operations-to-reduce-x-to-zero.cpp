@@ -18,8 +18,8 @@ public:
         int target = total - x, minOp = INT_MAX;
         
         getOp(nums, target, minOp);
-        reverse(nums.begin(), nums.end());
-        getOp(nums, target, minOp);
+        // reverse(nums.begin(), nums.end());
+        // getOp(nums, target, minOp);
         
         return minOp == INT_MAX ? -1 : minOp;
     }
