@@ -1,36 +1,24 @@
 class Solution {
-    pair<int, int> getPalindromeLenFromTheCenter(const string& s, int l, int r) {
-        if (s[l] != s[r]) {
-            return {1, l};
-        }
-        while (l >= 0 && r < s.size()) {
-            if (s[l] != s[r]) {
-                break;
-            }
-            l--;
-            r++;
-        }
-        return {r - l - 1, l + 1};
-    }
-    
 public:
     string longestPalindrome(string s) {
-        int mxLen = 1, startInd = 0;
-        
-        for (int i = 0; i < s.size(); i++) {
-            auto palindromeLenAndStartInd1 = getPalindromeLenFromTheCenter(s, i, i);
-            auto palindromeLenAndStartInd2 = getPalindromeLenFromTheCenter(s, i, i+1);
-            
-            if (mxLen < palindromeLenAndStartInd1.first) {
-                mxLen = palindromeLenAndStartInd1.first;
-                startInd = palindromeLenAndStartInd1.second;
-            }
-            if (mxLen < palindromeLenAndStartInd2.first) {
-                mxLen = palindromeLenAndStartInd2.first;
-                startInd = palindromeLenAndStartInd2.second;
+        int n = s.size(), maxLen = 1, l = 0;
+        vector<vector<bool>> isPalindrome(n, vector<bool>(n, false));
+    
+        for (int i = n-1; i >= 0; i--) {
+            isPalindrome[i][i] = true;
+            for (int j = i+1; j < n; j++) {
+                if (s[i] == s[j]) {
+                    if (i+1 == j) isPalindrome[i][j] = true;
+                    else isPalindrome[i][j] = isPalindrome[i+1][j-1];
+                    
+                    if (isPalindrome[i][j] and j - i + 1 > maxLen) {
+                        maxLen = j - i + 1;
+                        l = i;
+                    }
+                }
             }
         }
         
-        return s.substr(startInd, mxLen);
+        return s.substr(l, maxLen);
     }
 };
