@@ -1,46 +1,19 @@
 class Solution {
-    vector<vector<int>> dp;
-    
-    int rec(vector<vector<int>>& costs, int houseInd, int exclueColorInd) {
-        if (houseInd == costs.size()) return 0;
-        int* x = &dp[houseInd][exclueColorInd];
-        if (*x != -1) return *x;
-        
-        int mnCost = INT_MAX;
-        for (int i = 0; i < 3; i++) {
-            if (exclueColorInd == i) continue;
-            mnCost = min(mnCost, rec(costs, houseInd+1, i) + costs[houseInd][i]);
-        }
-        
-        return *x = mnCost;
+    int getPrevMin(vector<vector<int>>& costs, int i, int j) {
+        if (j == 0) return min(costs[i-1][j+1], costs[i-1][j+2]);
+        if (j == 1) return min(costs[i-1][j-1], costs[i-1][j+1]);
+        return min(costs[i-1][j-1], costs[i-1][j-2]);
     }
     
 public:
     int minCost(vector<vector<int>>& costs) {
-        // dp.resize(costs.size(), vector<int>(3, -1));
-        // int mnCost = INT_MAX;
-        // for (int i = 0; i < 3; i++) {
-        //     mnCost = min(mnCost, rec(costs, 0, i));
-        // }
-        // return mnCost;
-        
-        // dp.resize(costs.size()+1, vector<int>(3, INT_MAX));
-        // dp[0][0] = dp[0][1] = dp[0][2] = 0;
-        vector<int> colorCost(3, 0);
-        int n = costs.size();
-        
-        for (int i = 1; i <= n; i++) {
-            auto currentColorCost = colorCost;
-            for (int k = 0; k < 3; k++) {
-                int mnCost = INT_MAX;
-                for (int j = 0; j < 3; j++) {
-                    if (j == k) continue;
-                    mnCost = min(mnCost, currentColorCost[j]);
-                }
-                colorCost[k] = mnCost + costs[i-1][k];
+        for (int i = 1; i < costs.size(); i++) {
+            for (int j = 0; j < costs[i].size(); j++) {
+                costs[i][j] += getPrevMin(costs, i, j);
             }
         }
         
-        return min({colorCost[0], colorCost[1], colorCost[2]});
+        int n = costs.size();
+        return *min_element(costs[n-1].begin(), costs[n-1].end());
     }
 };
