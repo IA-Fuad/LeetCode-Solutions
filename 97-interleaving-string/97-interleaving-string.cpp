@@ -1,10 +1,10 @@
 class Solution {
-    int dp[205][105][105];
+    int dp[205][105];
     int n, m, p;
     
     bool rec(const string& s1, const string& s2, const string& s3, int i, int j, int k) {
         if (p == k) return true;
-        if (dp[k][i][j] != -1) return dp[k][i][j];
+        if (dp[k][i] != -1) return dp[k][i];
         
         bool a = false, b = false;
         
@@ -15,7 +15,7 @@ class Solution {
             b = rec(s1, s2, s3, i, j+1, k+1);
         }
         
-        return dp[k][i][j] = (a | b);
+        return dp[k][i] = (a | b);
     } 
     
 public:
