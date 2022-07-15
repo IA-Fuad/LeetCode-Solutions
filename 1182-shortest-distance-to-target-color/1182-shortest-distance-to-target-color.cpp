@@ -2,32 +2,24 @@ class Solution {
 public:
     vector<int> shortestDistanceColor(vector<int>& colors, vector<vector<int>>& queries) {
         int n = colors.size();
-        vector<vector<int>> shortestDistanceAtEachIndex(n, vector<int>(4, n));
+        vector<vector<int>> dists(n, vector<int>(4, n));
         
-        shortestDistanceAtEachIndex[0][colors[0]] = 0;
-        for (int i = 1; i < n; i++) {
-            for (int c = 1; c <= 3; c++) {
-                shortestDistanceAtEachIndex[i][c] = shortestDistanceAtEachIndex[i-1][c] + 1;
+        for (int i = 0, j = n-1; i < n; i++, j--) {
+            for (int color = 1; color <= 3; color++) {
+                if (colors[i] == color) dists[i][color] = 0;
+                if (colors[j] == color) dists[j][color] = 0;
+                if (i == 0) continue;
+                dists[i][color] = min(dists[i-1][color]+1, dists[i][color]);
+                dists[j][color] = min(dists[j+1][color]+1, dists[j][color]);
             }
-            shortestDistanceAtEachIndex[i][colors[i]] = 0;
-        }
-        shortestDistanceAtEachIndex[n-1][colors[n-1]] = 0;
-        for (int i = n-2; i >= 0; i--) {
-            for (int c = 1; c <= 3; c++) {
-                shortestDistanceAtEachIndex[i][c] = min(shortestDistanceAtEachIndex[i][c], shortestDistanceAtEachIndex[i+1][c] + 1);
-            }
-            shortestDistanceAtEachIndex[i][colors[i]] = 0; 
         }
         
-        vector<int> shortestDistances;
-        for (auto q : queries) {
-            int distance = shortestDistanceAtEachIndex[q[0]][q[1]];
-            if (distance >= n) {
-                distance = -1;
-            }
-            shortestDistances.push_back(distance);
+        vector<int> ans;
+        for(auto& query : queries) {
+            int dist = dists[query[0]][query[1]];
+            ans.push_back(dist == n ? -1 : dist);
         }
         
-        return shortestDistances;
+        return ans;
     }
 };
