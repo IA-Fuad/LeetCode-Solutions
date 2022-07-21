@@ -13,7 +13,7 @@ class Solution {
         if (limit == 0) return head;
         ListNode* prev = nullptr;
         ListNode* curr = head;
-        cout << curr->val << ' ';
+        //cout << curr->val << ' ';
         while (limit-- >= 0) {
             auto next = curr->next;
             curr->next = prev;
