@@ -10,22 +10,22 @@
  * };
  */
 class Solution {
-    int ans, currentElement;
-    
-    void rec(TreeNode* node, int k) {
-        if (!node) return;
-        rec(node->left, k);
-        currentElement++;
-        if (currentElement == k) {
-            ans = node->val;
-            return;
+    TreeNode* ans;
+    void rec(TreeNode* curr, int& k) {
+        if (!curr) return;
+        
+        rec(curr->left, k);
+        k--;
+        if (k == 0) {
+            ans = curr;
         }
-        rec(node->right, k);
+        rec(curr->right, k);
     }
     
 public:
     int kthSmallest(TreeNode* root, int k) {
         rec(root, k);
-        return ans;
+        
+        return ans->val;
     }
 };
