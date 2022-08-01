@@ -12,7 +12,7 @@
 class Solution {
     vector<int> leafs, leftMostNodes, rightMostNodes;
     
-    void getLeafs(TreeNode* curr) {
+    void getLeafs(TreeNode* curr, bool fromLeft, bool fromRight) {
         if (!curr) {
             return;
         }
@@ -20,9 +20,15 @@ class Solution {
             leafs.push_back(curr->val);
             return;
         }
-        
-        getLeafs(curr->left);
-        getLeafs(curr->right);
+        if (fromLeft) {
+            leftMostNodes.push_back(curr->val);
+        }
+        if (fromRight) {
+            rightMostNodes.push_back(curr->val);
+        }
+
+        getLeafs(curr->left, (curr->left and fromLeft), (!curr->right and fromRight));
+        getLeafs(curr->right, (!curr->left and fromLeft), (curr->right and fromRight));
     }
     
     void getLeftMostNodes(TreeNode* curr) {
@@ -51,9 +57,10 @@ public:
         if (!root->left and !root->right) return {root->val};
         
         leftMostNodes.push_back(root->val);
-        getLeafs(root);
-        getLeftMostNodes(root->left);
-        getRightMostNodes(root->right);
+        getLeafs(root->left, true, false);
+        getLeafs(root->right, false, true);
+        //getLeftMostNodes(root->left);
+        //getRightMostNodes(root->right);
         
         reverse(rightMostNodes.begin(), rightMostNodes.end());
         for (int n : leafs) leftMostNodes.push_back(n);
