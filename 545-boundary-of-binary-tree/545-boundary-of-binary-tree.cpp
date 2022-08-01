@@ -31,26 +31,6 @@ class Solution {
         getLeafs(curr->right, (!curr->left and fromLeft), (curr->right and fromRight));
     }
     
-    void getLeftMostNodes(TreeNode* curr) {
-        if (!curr or (!curr->left and !curr->right)) {
-            return;
-        }
-        leftMostNodes.push_back(curr->val);
-        
-        if (!curr->left) getLeftMostNodes(curr->right);
-        else getLeftMostNodes(curr->left);
-    }
-    
-    void getRightMostNodes(TreeNode* curr) {
-        if (!curr or (!curr->left and !curr->right)) {
-            return;
-        }
-        rightMostNodes.push_back(curr->val);
-        
-        if (!curr->right) getRightMostNodes(curr->left);
-        else getRightMostNodes(curr->right);
-    }
-    
 public:
     vector<int> boundaryOfBinaryTree(TreeNode* root) {
         if (!root) return {};
@@ -59,8 +39,6 @@ public:
         leftMostNodes.push_back(root->val);
         getLeafs(root->left, true, false);
         getLeafs(root->right, false, true);
-        //getLeftMostNodes(root->left);
-        //getRightMostNodes(root->right);
         
         reverse(rightMostNodes.begin(), rightMostNodes.end());
         for (int n : leafs) leftMostNodes.push_back(n);
