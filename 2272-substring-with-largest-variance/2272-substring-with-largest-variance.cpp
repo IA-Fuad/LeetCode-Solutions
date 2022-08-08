@@ -10,44 +10,27 @@ public:
                 if (c == d) continue;
                 //cout << c << ' ' << d << endl;
                 int currentDiff = 0;
-                int cCount = 0, dCount = 0;
+                int cCount = 0, dCount = 0, prevCCount = 0, prevDCount = 0;
                 
                 for (int i = 0, j = 0; i < s.size(); i++) {
                     if (s[i] != c and s[i] != d) continue;
                     cCount += (s[i] == c ? 1 : 0);
                     dCount += (s[i] == d ? 1 : 0);
                     
-                    while (dCount >= cCount and j < i) {
-                        cCount -= (s[j] == c ? 1 : 0);
-                        dCount -= (s[j] == d ? 1 : 0);
-                        j++;
+                    if (dCount >= cCount) {
+                        prevCCount = cCount;
+                        prevDCount = dCount;
+                        cCount = dCount = 0;
                     }
                     
                     if (cCount > 0 and dCount > 0) {
                         maxDiff = max(maxDiff, cCount - dCount);
                     }
-                    
+                    else if (cCount+prevCCount > 0 and dCount+prevDCount > 0) {
+                        maxDiff = max(maxDiff, (cCount+prevCCount)-(dCount+prevDCount));
+                    }
                     //cout << cCount << ' ' << dCount << endl;
                 }
-                cCount = dCount = currentDiff = 0;
-                for (int i = 0, j = 0; i < s.size(); i++) {
-                    if (s[i] != c and s[i] != d) continue;
-                    cCount += (s[i] == c ? 1 : 0);
-                    dCount += (s[i] == d ? 1 : 0);
-                    
-                    while (dCount > cCount and j < i) {
-                        cCount -= (s[j] == c ? 1 : 0);
-                        dCount -= (s[j] == d ? 1 : 0);
-                        j++;
-                    }
-                    
-                    if (cCount > 0 and dCount > 0) {
-                        maxDiff = max(maxDiff, cCount - dCount);
-                    }
-                    
-                    //cout << cCount << ' ' << dCount << endl;
-                }
-                //cout << endl;
             }
         }
         
