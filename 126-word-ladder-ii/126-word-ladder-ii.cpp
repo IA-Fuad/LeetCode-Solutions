@@ -1,74 +1,100 @@
 class Solution {
-    typedef unordered_map<string, vector<string>> WordChilds;
-    void rec(WordChilds& words, vector<vector<string>>& ans, vector<string>& currentSeq, string word, const string& endWord) {
-        if (word == endWord) {
-            ans.push_back(currentSeq);
+    unordered_map<string, vector<string>> adjWords;
+    unordered_map<string, vector<string>> parents;
+    unordered_set<string> words;
+    vector<vector<string>> ladders;
+    
+    void buildAdjWords() {
+        for (string word : words) {
+            string w = word;
+            
+            for (char c = 'a'; c <= 'z'; c++) {
+                for (int i = 0; i < word.size(); i++) {
+                    if (c == word[i]) continue;
+                    char orig = word[i];
+                    word[i] = c;
+                    
+                    if (words.find(word) != words.end()) {
+                        adjWords[w].push_back(word);
+                    }
+                    word[i] = orig;
+                }
+            }
+        }
+    }
+    
+    void bfs(string& beginWord, string& endWord) {
+        queue<string> Q;
+        Q.push(beginWord);
+        
+        int level = 0;
+        unordered_map<string, int> seenAtLevel;
+        seenAtLevel[beginWord] = level;
+        bool endFound = false;
+        
+        while (!Q.empty() and !endFound) {
+            level++;
+            int currentSize = Q.size();
+            
+            for (int k = 0; k < currentSize; k++) {
+                string word = Q.front();
+                Q.pop();
+
+                auto adj = adjWords.find(word);
+                if (adj == adjWords.end()) continue;
+
+                for (string w : adj->second) {
+                    auto seen = seenAtLevel.find(w);
+                    
+                    if (seen == seenAtLevel.end()) {
+                        Q.push(w);
+                        seenAtLevel[w] = level;
+                    }
+                    if (w != word and (seen == seenAtLevel.end() or seen->second == level)) {
+                        parents[w].push_back(word);
+                    }
+                    
+                    if (w == endWord) endFound = true;
+                }   
+            }
+        }
+        
+        return;
+    }
+    
+    void rec(vector<string>& ladder, const string& currentWord, const string& beginWord, int level) {
+        if (currentWord == beginWord) {
+            ladders.push_back(ladder);
             return;
         }
         
-        for (auto child : words[word]) {
-            currentSeq.push_back(child);
-            rec(words, ans, currentSeq, child, endWord);
-            currentSeq.pop_back();
+        for (string w : parents[currentWord]) {
+            ladder.push_back(w);
+            rec(ladder, w, beginWord, level+1);
+            ladder.pop_back();
         }
     }
     
 public:
     vector<vector<string>> findLadders(string beginWord, string endWord, vector<string>& wordList) {
-        if (beginWord == endWord) return {{beginWord}};
+        for (const string& word : wordList) {
+            words.insert(word);
+        }
+        words.insert(beginWord);
         
-        unordered_map<string, int> seenAtLevel;
-        for (string& word : wordList) {
-            seenAtLevel[word] = -1;
+        if (words.find(endWord) == words.end()) return {};
+        
+        buildAdjWords();
+        bfs(beginWord, endWord);
+
+        vector<string> ladder = {endWord};
+        //cout << parents[endWord].size() << ' ';
+        rec(ladder, endWord, beginWord, 0);
+        
+        for (auto& ladder : ladders) {
+            reverse(ladder.begin(), ladder.end());
         }
         
-        WordChilds childs;
-        
-        int level = 0;
-        seenAtLevel[beginWord] = level;
-        queue<string> Q;
-        Q.push(beginWord);
-        bool foundEndWord = false;
-        
-        while (!Q.empty() and !foundEndWord) {
-            int currentQSize = Q.size();
-
-            while (--currentQSize >= 0) {
-                string currentWord = Q.front();
-                Q.pop();
-                
-                string nextWord = currentWord;
-                for (int i = 0; i < currentWord.size(); i++) {
-                    char cc = nextWord[i];
-                    for (char c = 'a'; c <= 'z'; c++) {
-                        if (c == cc) continue;
-                        nextWord[i] = c;
-                        auto it = seenAtLevel.find(nextWord);
-                        if (it != seenAtLevel.end() and (it->second == level or it->second == -1)) {
-                            if (nextWord == endWord) {
-                                foundEndWord = true;
-                            }
-                            if (it->second != level) {
-                                Q.push(nextWord);
-                            }
-                            it->second = level;
-                            childs[currentWord].push_back(nextWord);
-                        }
-                    }
-                    nextWord[i] = cc;
-                }
-            }
-            
-            level++;
-        }
-        
-        vector<vector<string>> ans;
-        vector<string> currentSeq = {beginWord};
-        
-        if (!foundEndWord) return ans;
-
-        rec(childs, ans, currentSeq, beginWord, endWord);
-        
-        return ans;
+        return ladders;
     }
 };
