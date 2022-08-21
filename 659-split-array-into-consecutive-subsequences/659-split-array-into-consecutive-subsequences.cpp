@@ -10,7 +10,7 @@ public:
         
         priority_queue<pii, vector<pii>, decltype(comp)> Q(comp);
         
-        for (int i = 0; i < nums.size(); i++) {
+        for (int i = 0; i <= nums.size(); i++) {
             int num = i < nums.size() ? nums[i] : INT_MAX;
             
             if (Q.empty()) {
@@ -25,27 +25,22 @@ public:
                 }
                 else {
                     while (!Q.empty()) {
-                    auto[n, len] = Q.top();
-                    Q.pop();
+                        auto[n, len] = Q.top();
+                        Q.pop();
 
-                    if (num-1 == n) {
-                        Q.push({num, len+1});
-                        break;
-                    }
-                    else if (len < 3) {
-                        return false;
-                    }
+                        if (num-1 == n) {
+                            Q.push({num, len+1});
+                            break;
+                        }
+                        else if (len < 3) {
+                            return false;
+                        }
                     }
                     if (Q.empty()) {
                         Q.push({num, 1});
                     }
                 }
             }
-        }
-        
-        while (!Q.empty()) {
-            if (Q.top().second < 3) return false;
-            Q.pop();
         }
         
         return true;
