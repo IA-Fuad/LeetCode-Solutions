@@ -1,18 +1,19 @@
 class Solution {
-    unordered_map<int, vector<int>> graph;
+    vector<vector<int>> graph;
     
-    void dfs(int u, unordered_set<int>& visited, int& visitedCount) {
-        visited.insert(u);
+    void dfs(int u, vector<bool>& visited, int& visitedCount) {
+        visited[u] = true;
         visitedCount++;
         
         for (int v : graph[u]) {
-            if (visited.find(v) != visited.end()) continue;
+            if (visited[v]) continue;
             dfs(v, visited, visitedCount);
         }
     }
     
 public:
     int removeStones(vector<vector<int>>& stones) {
+        graph.resize(stones.size(), vector<int>(stones.size()));
         for (int i = 0; i < stones.size(); i++) {
             for (int j = 0; j < stones.size(); j++) {
                 if (i == j) continue;
@@ -23,14 +24,14 @@ public:
             }
         }
         
-        unordered_set<int> visited;
+        vector<bool> visited(stones.size());
         int canRemove = 0;
         
-        for (auto& node : graph) {
+        for (int node = 0; node < stones.size(); node++) {
             int visitedCount = 0;
             
-            if (visited.find(node.first) == visited.end()) {
-                dfs(node.first, visited, visitedCount);
+            if (!visited[node]) {
+                dfs(node, visited, visitedCount);
                 canRemove += (visitedCount - 1);
             }
         }
