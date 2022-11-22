@@ -17,13 +17,23 @@ class Solution {
     
 public:
     int numSquares(int n) {
-        dp.resize(n+1, -1);
+        dp.resize(n+1, 100000);
         vector<int> nums;
         
         for (int i = 1; i * i <= n; i++) {
             nums.push_back(i*i);
         }
         
-        return rec(nums, n);
+        //   return rec(nums, n);
+        dp[0] = 0;
+        
+        for (int i = 1; i <= n; i++) {
+            for (int sq : nums) {
+                if (sq > i) break;
+                dp[i] = min(dp[i], dp[i-sq] + 1);
+            }
+        }
+        
+        return dp[n];
     }
 };
