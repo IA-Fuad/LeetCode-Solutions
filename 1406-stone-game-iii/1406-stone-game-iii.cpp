@@ -16,12 +16,30 @@ class Solution {
     
 public:
     string stoneGameIII(vector<int>& stoneValue) {
-        dp.resize(stoneValue.size(), -1);
+//         dp.resize(stoneValue.size(), -1);
         
-        int diff = rec(stoneValue, 0);
-        // cout << diff << ' ';   
-        if (diff > 0) return "Alice";
-        if (diff < 0) return "Bob";
+//         int diff = rec(stoneValue, 0);
+//         // cout << diff << ' ';   
+//         if (diff > 0) return "Alice";
+//         if (diff < 0) return "Bob";
+//         return "Tie";
+        
+        
+        int len = stoneValue.size();
+        int currMax[3];
+        currMax[0] = 0, currMax[1] = 0, currMax[2] = 0;
+        
+        for (int i = len-1; i >= 0; i--) {
+            int curr = stoneValue[i] - currMax[0];
+            curr = max(curr, (i + 1) >= len ? INT_MIN : (stoneValue[i] + stoneValue[i+1] - currMax[1]));
+            curr = max(curr, (i + 2) >= len ? INT_MIN : (stoneValue[i] + stoneValue[i+1] + stoneValue[i+2] - currMax[2]));
+            currMax[2] = currMax[1];
+            currMax[1] = currMax[0];
+            currMax[0] = curr;
+        }
+        
+        if (currMax[0] > 0) return "Alice";
+        if (currMax[0] < 0) return "Bob";
         return "Tie";
     }
 };
