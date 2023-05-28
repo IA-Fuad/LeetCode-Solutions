@@ -19,7 +19,7 @@ public:
         dp.resize(stoneValue.size(), -1);
         
         int diff = rec(stoneValue, 0);
-     cout << diff << ' ';   
+        // cout << diff << ' ';   
         if (diff > 0) return "Alice";
         if (diff < 0) return "Bob";
         return "Tie";
