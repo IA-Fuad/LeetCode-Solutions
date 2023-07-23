@@ -17,25 +17,25 @@ public:
         if (n % 2 == 0) return {};
         if (n == 1) return {new TreeNode()};
         
-        auto bt = binTrees.find(n);
-        if (bt != binTrees.end()) {
-            return bt->second;
-        }
+        binTrees[0] = {};
+        binTrees[1] = {new TreeNode()};
         
-        vector<TreeNode*> fbt;
-        
-        for (int k = 1; k < n; k += 2) {
-            auto leftTrees = allPossibleFBT(k);
-            auto rightTrees = allPossibleFBT(n - k - 1);
-            
-            for (auto lt : leftTrees) {
-                for(auto rt : rightTrees) {
-                    auto node = new TreeNode(0, lt, rt);
-                    fbt.push_back(node);
-                } 
+        for (int i = 3; i <= n; i++) {
+            vector<TreeNode*> fbt;
+            for (int k = 1; k < i; k += 2) {
+                auto leftTrees = binTrees[k];
+                auto rightTrees = binTrees[i - k - 1];
+
+                for (auto lt : leftTrees) {
+                    for(auto rt : rightTrees) {
+                        auto node = new TreeNode(0, lt, rt);
+                        fbt.push_back(node);
+                    } 
+                }
             }
+            binTrees[i] = fbt;
         }
         
-        return binTrees[n] = fbt;
+        return binTrees[n];
     }
 };
