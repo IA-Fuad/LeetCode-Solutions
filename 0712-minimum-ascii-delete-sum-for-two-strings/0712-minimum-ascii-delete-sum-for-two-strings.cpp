@@ -15,7 +15,7 @@ class Solution {
         if (j >= s2.size()) return getASCIISum(s1, i);
         
         if (dp[i][j] != -1) return dp[i][j];
-        if (s1[i] == s2[j]) return rec(s1, s2, i + 1, j + 1);
+        if (s1[i] == s2[j]) return dp[i][j] = rec(s1, s2, i + 1, j + 1);
         
         int a = rec(s1, s2, i + 1, j) + s1[i];
         int b = rec(s1, s2, i, j + 1) + s2[j];
