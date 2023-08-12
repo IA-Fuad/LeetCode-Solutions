@@ -1,35 +1,18 @@
 class Solution {
 public:
     string smallestNumber(string pattern) {
+        stack<char> S;
         string num;
-        int n = pattern.size();
-        vector<int> nextIIndex(n+1);
-        nextIIndex[n] = n;
         
-        for (int i = n-1; i >= 0; i--) {
-            if (pattern[i] == 'I') {
-                nextIIndex[i] = i;
+        for (int i = 0; i <= pattern.size(); i++) {
+            S.push(i+'1');
+            
+            if (i == pattern.size() or pattern[i] == 'I') {
+                while (!S.empty()) {
+                    num.push_back(S.top());
+                    S.pop();
+                }
             }
-            else {
-                nextIIndex[i] = nextIIndex[i+1];
-            }
-        }
-        
-        int currDigit = nextIIndex[0]+1;
-        int maxUsedDigit = currDigit;
-
-        num.push_back((char)(currDigit+'0'));
-        for (int i = 0; i < n; i++) {
-           // cout << currDigit << ' ' << nextIIndex[i+1] << ' ' << i << ' ';
-            if (pattern[i] == 'I') {
-                currDigit = maxUsedDigit + (nextIIndex[i+1] - i);
-            }
-            else {
-                currDigit--;
-            }
-          //  cout << currDigit << endl;
-            maxUsedDigit = max(maxUsedDigit, currDigit);
-            num.push_back((char)(currDigit+'0'));
         }
         
         return num;
