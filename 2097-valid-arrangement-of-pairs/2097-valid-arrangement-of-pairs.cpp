@@ -20,7 +20,10 @@ public:
         }
         int start = -1;
         for(auto &it: indegree) {
-            if(it.second >0) start = it.first;
+            if(it.second > 0) {
+                start = it.first;
+                break;
+            }
         }
         if(start == -1) {
             start = pairs[0][0];
