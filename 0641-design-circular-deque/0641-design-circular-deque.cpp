@@ -1,96 +1,58 @@
 class MyCircularDeque {
-    struct Node {
-        int value;
-        Node* next;
-        Node* prev;
-        
-        Node(int value, Node* next, Node* prev) {
-            this->value = value;
-            this->next = next;
-            this->prev = prev;
-        }
-        
-        Node() {
-            this->next = this->prev = nullptr;
-        }
-    };
-    
-    Node* head;
-    Node* tail;
-    int size, cap;
+    vector<int> dq;
+    int k;
+    int cnt;
+    int front;
+    int rear;
     
 public:
-    MyCircularDeque(int k) {
-        size = 0;
-        cap = k;
-        head = new Node();
-        tail = new Node();
-        head->next = tail;
-        tail->prev = head;
+    MyCircularDeque(int k) : k(k), cnt(0), front(k-1), rear(0), dq(k) {
     }
     
     bool insertFront(int value) {
-        if (size == cap) return false;
-        
-        auto temp = head->next;
-        head->next = new Node(value, temp, head);
-        if (temp) temp->prev = head->next;
-        size++;
-        
+        if (cnt == k) return false;
+        dq[front] = value;
+        front = (front - 1 + k) % k;
+        cnt++;
         return true;
     }
     
     bool insertLast(int value) {
-        if (size == cap) return false;
-        
-        auto temp = tail->prev;
-        tail->prev = new Node(value, tail, temp);
-        if (temp) temp->next = tail->prev;
-        size++;
-        
+        if (cnt == k) return false;
+        dq[rear] = value;
+        rear = (rear + 1) % k;
+        cnt++;
         return true;
     }
     
     bool deleteFront() {
-        if (size == 0) return false;
-        
-        auto temp = head->next;
-        head->next = temp->next;
-        if (head->next) head->next->prev = head;
-        delete temp;
-        size--;
-        
+        if (cnt == 0) return false;
+        front = (front + 1) % k;
+        cnt--;
         return true;
     }
     
     bool deleteLast() {
-        if (size == 0) return false;
-        
-        auto temp = tail->prev;
-        tail->prev = temp->prev;
-        if (tail->prev) tail->prev->next = tail;
-        delete temp;
-        size--;
-        
+        if (cnt == 0) return false;
+        rear = (rear - 1 + k) % k;
+        cnt--;
         return true;
     }
     
     int getFront() {
-        if (isEmpty()) return -1;
-        return head->next->value;
+        return isEmpty() ? -1 : dq[(front + 1) % k];
     }
     
     int getRear() {
-        if (isEmpty()) return -1;
-        return tail->prev->value;
+        return isEmpty() ? -1 : dq[(rear - 1 + k) % k];
     }
     
     bool isEmpty() {
-        return size == 0;
+        return cnt == 0;
     }
     
     bool isFull() {
-        return size == cap;
+        return cnt == k;
     }
 };
 
@@ -105,4 +67,11 @@ public:
  * int param_6 = obj->getRear();
  * bool param_7 = obj->isEmpty();
  * bool param_8 = obj->isFull();
+ 
+ 
+ 1 2 ^
+ 
+     ^ 
+ 
+ 
  */
