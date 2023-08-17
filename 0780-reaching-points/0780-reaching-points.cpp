@@ -2,17 +2,15 @@ class Solution {
 public:
     bool reachingPoints(int sx, int sy, int tx, int ty) {
         while (tx >= sx and ty >= sy) {
-            if (tx == ty) break;
-            if (tx > ty) {
-                if (ty == sy) return (tx - sx) % ty == 0;
-                tx %= ty;
-            }
-            else {
-                if (tx == sx) return (ty - sy) % tx == 0;
+            if (ty > tx) {
+                if (sx == tx) return (ty - sy) % sx == 0;
                 ty %= tx;
             }
+            else {
+                if (sy == ty) return (tx - sx) % sy == 0;
+                tx %= ty;
+            }
         }
-        
-        return tx == sx and ty == sy;
+        return sx == tx and sy == ty;
     }
 };
