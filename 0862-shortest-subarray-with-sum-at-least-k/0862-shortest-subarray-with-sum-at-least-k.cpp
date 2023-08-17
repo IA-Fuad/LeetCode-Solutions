@@ -1,31 +1,28 @@
 class Solution {
 public:
     int shortestSubarray(vector<int>& nums, int k) {
-        int n = nums.size();
-        deque<int> dq;
-        vector<int64_t> prefixSum(n, 0);
-        prefixSum[0] = nums[0];
-        for (int i = 1; i < n; i++) {
-            prefixSum[i] = prefixSum[i-1] + nums[i];
-        }
-        dq.push_back(0);
-        int len = INT_MAX;
+        deque<pair<int64_t, int>> Q;
+        int n = nums.size(), len = INT_MAX;
+        int64_t preSum = 0;
+
+        Q.push_back({nums[0], 0});
         
         for (int i = 0; i < n; i++) {
-            if (prefixSum[i] >= k) {
-                len = min(len, i+1);
+            preSum += nums[i];
+            if (preSum >= k) {
+                len = min(len, i + 1);
             }
             
-            while (!dq.empty() and prefixSum[i] - prefixSum[dq.front()] >= k) {
-                len = min(len, i - dq.front());
-                dq.pop_front();
+            while (!Q.empty() and preSum - Q.front().first >= k) {
+                len = min(len, i - Q.front().second);
+                Q.pop_front();
             }
             
-            while (!dq.empty() and prefixSum[i] <= prefixSum[dq.back()]) {
-                dq.pop_back();
+            while (!Q.empty() and preSum <= Q.back().first) {
+                Q.pop_back();
             }
             
-            dq.push_back(i);
+            Q.push_back({preSum, i});
         }
         
         return len == INT_MAX ? -1 : len;
@@ -34,10 +31,10 @@ public:
 
 /*
 
-2 -1 5
+5 -1 -1 -1 3
 
-2 1 5
+5 4 3 2 5
 
-1 
+
 
 */
