@@ -2,20 +2,43 @@ class Solution {
 public:
     int candy(vector<int>& ratings) {
         int n = ratings.size();
-        vector<int> leftInc(n, 1);
+        int minCandy = n, i = 1;
         
-        for (int i = 1; i < n; i++) {
-            if (ratings[i] > ratings[i-1]) leftInc[i] = leftInc[i-1] + 1;
-        }
-        
-        int rightInc = 1, minCandy = 0;
-        for (int i = n-1; i >= 0; i--) {
-            if (i < n-1 and ratings[i] > ratings[i+1]) rightInc++;
-            else rightInc = 1;
+        while (i < n) {
+            if (ratings[i] == ratings[i-1]) {
+                i++;
+                continue;
+            }
             
-            minCandy += max(leftInc[i], rightInc);
+            int up = 0, down = 0;
+            
+            while (i < n and ratings[i] > ratings[i-1]) {
+                up++;
+                i++;
+                
+                minCandy += up;
+            }
+            
+            while (i < n and ratings[i] < ratings[i-1]) {
+                down++;
+                i++;
+                
+                minCandy += down;
+            }
+            
+            minCandy -= min(up, down);
         }
         
         return minCandy;
     }
 };
+
+
+/*
+
+1 5 4 3 2 1
+
+0 1
+  0 1 2 3 4
+
+*/
