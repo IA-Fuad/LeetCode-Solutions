@@ -1,28 +1,35 @@
 class SparseVector {
-    vector<int>* nums;
-    vector<int> nonZeroValueIndices;
+    vector<pair<int, int>> sVec;
+    
+    int getDotProduct(vector<pair<int, int>>& nums1, vector<pair<int, int>>& nums2) {
+        int i = 0, j = 0, product = 0;
+        
+        while (i < nums1.size() and j < nums2.size()) {
+            if (nums1[i].first == nums2[j].first) {
+                product += (nums1[i].second * nums2[j].second);
+                i++;
+                j++;
+            }
+            else if (nums1[i].first < nums2[j].first) i++;
+            else j++;
+        }
+        
+        return product;
+    }
     
 public:
     
     SparseVector(vector<int> &nums) {
-        this->nums = &nums;
-        
         for (int i = 0; i < nums.size(); i++) {
             if (nums[i] != 0) {
-                nonZeroValueIndices.push_back(i);
+                sVec.push_back({i, nums[i]});
             }
         }
     }
     
     // Return the dotProduct of two sparse vectors
     int dotProduct(SparseVector& vec) {
-        int product = 0;
-        
-        for (int i = 0; i < nonZeroValueIndices.size(); i++) {
-            product += (nums->at(nonZeroValueIndices[i]) * vec.nums->at(nonZeroValueIndices[i]));
-        }
-        
-        return product;
+        return getDotProduct(this->sVec, vec.sVec);
     }
 };
 
