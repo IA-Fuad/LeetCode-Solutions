@@ -20,27 +20,27 @@ public:
 //         dp.resize(nm, vector<vector<int>>(n+1, vector<int>(m+1, -1)));
 //         return rec(s1, s2, s3, 0, 0, 0);
         
-        vector<vector<bool>> dp(n+1, vector<bool>(m+1));
+        vector<bool> dp(m+1);
         
         for (int i = 0; i <= n; i++) {
             for (int j = 0; j <= m; j++) {
                 if (i == 0 and j == 0) {
-                    dp[i][j] = true;
+                    dp[j] = true;
                     continue;
                 }
                 int k = i + j - 1;
                 if (i == 0) {
-                    dp[i][j] = dp[i][j-1] & (s2[j-1] == s3[k]);
+                    dp[j] = dp[j-1] & (s2[j-1] == s3[k]);
                 }
                 else if (j == 0) {
-                    dp[i][j] = dp[i-1][j] & (s1[i-1] == s3[k]);
+                    dp[j] = dp[j] & (s1[i-1] == s3[k]);
                 }
                 else {
-                    dp[i][j] = (dp[i-1][j] && s1[i-1] == s3[k]) || (dp[i][j-1] && s2[j-1] == s3[k]);
+                    dp[j] = (dp[j] && s1[i-1] == s3[k]) || (dp[j-1] && s2[j-1] == s3[k]);
                 }
             }
         }
         
-        return dp[n][m];
+        return dp[m];
     }
 };
